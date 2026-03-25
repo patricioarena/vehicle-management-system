@@ -3,7 +3,7 @@
  */
 
 plugins {
-    id 'java'
+    // Root project has no source code - plugins are declared per submodule
 }
 
 allprojects {
@@ -13,21 +13,32 @@ allprojects {
     
     group = 'com.example.vehicle'
     version = '1.0.0'
-    
-    java {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
 }
 
 subprojects {
-    apply plugin: 'java'
-    
-    dependencies {
-        // Common dependencies if needed
+    // Each submodule declares its own plugin (java-library or application)
+    // but we ensure JVM version is set for all Java submodules
+    plugins.withId('java') {
+        java {
+            sourceCompatibility = JavaVersion.VERSION_21
+            targetCompatibility = JavaVersion.VERSION_21
+        }
     }
     
-    test {
+    plugins.withId('java-library') {
+        java {
+            sourceCompatibility = JavaVersion.VERSION_21
+            targetCompatibility = JavaVersion.VERSION_21
+        }
+    }
+    
+    tasks.withType(Test).configureEach {
         useJUnitPlatform()
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
