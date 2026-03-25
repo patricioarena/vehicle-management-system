@@ -7,5 +7,7 @@ import app.constant.enums.TypeVehicle;
 import app.model.Vehicle;
 
 @FunctionalInterface
-public interface VehicleFactory extends BiFunction<TypeVehicle, StateVehicle, Vehicle> {
+public interface VehicleFactory {
+
+    Vehicle apply(TypeVehicle typeVehicle, StateVehicle stateVehicle);
 }

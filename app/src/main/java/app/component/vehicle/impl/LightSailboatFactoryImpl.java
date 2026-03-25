@@ -7,7 +7,7 @@ import app.constant.enums.TypeVehicle;
 import app.model.LightSailboat;
 import app.model.Vehicle;
 import app.model.vo.State;
-import com.google.inject.Inject;
+import jakarta.inject.Inject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
