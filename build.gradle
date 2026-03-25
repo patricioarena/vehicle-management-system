@@ -1,0 +1,33 @@
+/*
+ * Root build.gradle for guice-practice multi-module project
+ */
+
+plugins {
+    id 'java'
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+    
+    group = 'com.example.vehicle'
+    version = '1.0.0'
+    
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    
+    dependencies {
+        // Common dependencies if needed
+    }
+    
+    test {
+        useJUnitPlatform()
+    }
+}

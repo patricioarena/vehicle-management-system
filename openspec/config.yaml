@@ -1,0 +1,97 @@
+schema: spec-driven
+
+# Project context for AI code generation
+context: |
+  ## Tech Stack
+  - **Language**: Java 17
+  - **Build Tool**: Gradle 7.3
+  - **Dependency Injection**: Google Guice 7.0.0
+  - **Code Generation**: Lombok 1.18.30
+  - **Testing**: JUnit 5, AssertJ 3.24.2, Mockito 5.8.0
+  - **Logging**: SLF4J + Logback
+  - **Utilities**: Apache Commons Lang3, Guava
+
+  ## Code Style
+  - **Indent**: 2 spaces
+  - **Line length**: 100 characters max
+  - **Braces**: Same line (K&R style)
+  - Use `final var` for local variables (type inference)
+  - Use records for data models with `@Builder`
+  - Use `Optional<T>` for nullable returns
+  - Group imports: java.*, javax.*, third-party, then project, static imports last
+  - No wildcard imports (except static enums)
+
+  ## Design Patterns Used
+  - **Dependency Injection**: Guice with constructor injection using `@RequiredArgsConstructor(onConstructor = @__(@Inject))`
+  - **Factory Pattern**: `VehicleFactory` functional interface (BiFunction equivalent), factories registered in `VehicleAbstractFactoryImpl` EnumMap
+  - **Abstract Factory**: `VehicleAbstractFactoryImpl` with `@Singleton`
+  - **Adapter Pattern**: `VehicleAdapter`/`VehicleAdapterImpl` for simplified API
+  - **Builder Pattern**: Lombok `@Builder` on records for complex objects
+  - **Enum as Strategy**: `TypeVehicle`, `StateVehicle`, `FuelType`, `DrivingType`
+
+  ## Package Structure
+  ```
+  app/
+    Main.java              # Entry point
+    component/
+      motor/               # Motor implementations
+        Motor.java         # Abstract base class
+        CombustionMotor.java
+        ElectricMotor.java
+      vehicle/
+        VehicleFactory.java          # Functional interface
+        impl/
+          CarFactoryImpl.java
+          LightSailboatFactoryImpl.java
+          VehicleAbstractFactoryImpl.java  # EnumMap-based registry
+    config/
+      AppModule.java       # Guice bindings
+    constant/
+      DrivingType.java     # LAND, AQUATIC, AERIAL
+      enums/
+        FuelType.java
+        StateVehicle.java  # NEW, CLEAN, ROUGH, DAMAGED
+        TypeVehicle.java   # 49 vehicle types with id, hasEngine, drivingType
+    custom/exception/
+      UnsupportedVehicleTypeException.java
+    model/
+      Vehicle.java         # Marker interface
+      Car.java             # Record with @Builder
+      LightSailboat.java   # Record with @Builder
+      vo/
+        State.java         # Value object
+    usecase/
+      VehicleAdapter.java  # Interface
+      VehicleAdapterImpl.java
+  ```
+
+  ## Key Implementation Details
+  - **Motor System**: Abstract `Motor` class with `CombustionMotor` (power, cylinders, fuelType) and `ElectricMotor` (power, batteryCapacity). Singleton `EmptyMotor` for no-engine vehicles.
+  - **Vehicle Creation Flow**: Main → Guice Injector → AppModule → VehicleAdapterImpl → VehicleAbstractFactoryImpl → Specific Factory → Vehicle record
+  - **Vehicle Types Supported**: Currently implemented: CAR, LIGHT_SAILBOAT (extensible to 49 types in TypeVehicle enum)
+  - **Adding New Vehicle Type**:
+    1. Create model record with `@Builder`
+    2. Create factory implementing `VehicleFactory`
+    3. Add to `TypeVehicle` enum with id, hasEngine, drivingType
+    4. Register in `VehicleAbstractFactoryImpl` constructor
+    5. Add `@Named` binding in `AppModule`
+    6. Add adapter method in `VehicleAdapter`/`VehicleAdapterImpl`
+
+  ## Commands
+  - Build: `./gradlew build` (Windows: `gradlew.bat build`)
+  - Run: `./gradlew run`
+  - Test: `./gradlew test`
+  - Clean: `./gradlew clean`
+
+# Per-artifact rules (optional)
+rules:
+  new-vehicle:
+    - Follow the 6-step process for adding new vehicle types
+    - Ensure new vehicle implements Vehicle interface
+    - Use records with @Builder for data models
+    - Register factory in both AppModule and VehicleAbstractFactoryImpl
+  code-changes:
+    - Maintain 2-space indentation
+    - Keep lines under 100 characters
+    - Use constructor injection with Lombok
+    - Add appropriate logging with @Slf4j
