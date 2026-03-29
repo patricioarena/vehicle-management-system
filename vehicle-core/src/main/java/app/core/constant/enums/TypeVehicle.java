@@ -1,7 +1,7 @@
 package app.core.constant.enums;
 
-import static app.core.constant.DrivingType.AQUATIC;
 import static app.core.constant.DrivingType.AERIAL;
+import static app.core.constant.DrivingType.AQUATIC;
 import static app.core.constant.DrivingType.LAND;
 
 public enum TypeVehicle {

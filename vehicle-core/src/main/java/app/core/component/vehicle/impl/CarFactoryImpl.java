@@ -25,8 +25,7 @@ public class CarFactoryImpl implements VehicleFactory {
     return carBuilder.build();
   }
 
-  private void buildEngine(final TypeVehicle typeVehicle,
-      final Car.CarBuilder car) {
+  private void buildEngine(final TypeVehicle typeVehicle, final Car.CarBuilder car) {
     if (typeVehicle.hasEngine()) {
       car.motor(Motor.empty());
     }

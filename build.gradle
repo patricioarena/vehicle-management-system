@@ -10,7 +10,7 @@ allprojects {
     repositories {
         mavenCentral()
     }
-    
+
     group = 'com.example.vehicle'
     version = '1.0.0'
 }
@@ -24,14 +24,14 @@ subprojects {
             targetCompatibility = JavaVersion.VERSION_21
         }
     }
-    
+
     plugins.withId('java-library') {
         java {
             sourceCompatibility = JavaVersion.VERSION_21
             targetCompatibility = JavaVersion.VERSION_21
         }
     }
-    
+
     tasks.withType(Test).configureEach {
         useJUnitPlatform()
     }

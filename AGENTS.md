@@ -4,29 +4,45 @@ Guidelines for AI agents working on this Guice dependency injection practice pro
 
 ## Build Commands
 
-Gradle-based Java 17 project (Gradle wrapper included):
+Gradle-based Java 21 multi-module project (Gradle wrapper included):
+
+### Project Structure
+- `vehicle-core` - Core domain logic, models, factories, and business rules
+- `vehicle-cli` - Interactive command-line interface
+- `vehicle-api` - REST API using Javalin
+
+### Commands
 
 ```bash
-# Build
+# Build all modules
 ./gradlew build
-
-# Run application
-./gradlew run
-
-# Run all tests
-./gradlew test
-
-# Run single test class
-./gradlew test --tests "app.MainTest"
-
-# Run single test method
-./gradlew test --tests "app.MainTest.appHasAGreeting"
 
 # Clean build artifacts
 ./gradlew clean
 
+# Run CLI application
+./gradlew :vehicle-cli:run
+
+# Run API server
+./gradlew :vehicle-api:run
+
+# Run all tests
+./gradlew test
+
+# Run core module tests only
+./gradlew :vehicle-core:test
+
+# Run single test class
+./gradlew :vehicle-core:test --tests "app.core.MainTest"
+
+# Run single test method
+./gradlew :vehicle-core:test --tests "app.core.MainTest.appHasAGreeting"
+
 # Check dependencies
 ./gradlew dependencies
+
+# Build vehicle-core JAR
+./gradlew :vehicle-core:jar
 ```
 
 On Windows: use `gradlew.bat` instead of `./gradlew`.
@@ -34,7 +50,7 @@ On Windows: use `gradlew.bat` instead of `./gradlew`.
 ## Code Style Guidelines
 
 ### Language & Formatting
-- **Java 17** - Use modern features (records, var, switch expressions)
+- **Java 21** - Use modern features (records, var, switch expressions)
 - **Indent**: 2 spaces (not tabs)
 - **Line length**: 100 characters max
 - **Braces**: Same line (K&R style)
@@ -48,8 +64,8 @@ On Windows: use `gradlew.bat` instead of `./gradlew`.
   import java.util.*;
   import com.google.inject.*;
   import lombok.*;
-  import app.component.*;
-  import static app.constant.enums.FuelType.*;
+  import app.core.component.*;
+  import static app.core.constant.enums.FuelType.*;
   ```
 
 ### Naming Conventions
@@ -81,7 +97,7 @@ On Windows: use `gradlew.bat` instead of `./gradlew`.
 - Add named binding in `AppModule`
 
 ### Error Handling
-- Use custom exceptions in `app.custom.exception`
+- Use custom exceptions in `app.core.custom.exception`
 - Example: `UnsupportedVehicleTypeException`
 - Prefer unchecked exceptions for programming errors
 - Validate inputs with `Objects.requireNonNull()`
@@ -104,13 +120,16 @@ On Windows: use `gradlew.bat` instead of `./gradlew`.
 ### Package Structure
 ```
 app/
-  component/     # Business logic, factories, motors
-  config/        # Guice modules
-  constant/      # Enums, constants
-  custom/exception/  # Custom exceptions
-  model/         # Domain models (records)
-  model/vo/      # Value objects
-  usecase/       # Application services, adapters
+  core/
+    component/     # Business logic, factories, motors
+    config/        # Guice modules
+    constant/      # Enums, constants
+    custom/exception/  # Custom exceptions
+    model/         # Domain models (records)
+    model/vo/      # Value objects
+    usecase/       # Application services, adapters
+  cli/             # CLI application entry point
+  api/             # REST API application entry point
 ```
 
 ### Logging
@@ -126,8 +145,8 @@ app/
 - Keep comments current with code changes
 
 ### Adding New Vehicle Types
-1. Create model record in `app.model` with `@Builder`
-2. Create factory in `app.component.vehicle.impl`
+1. Create model record in `app.core.model` with `@Builder`
+2. Create factory in `app.core.component.vehicle.impl`
 3. Add type to `TypeVehicle` enum with id, hasEngine, drivingType
 4. Register factory in `VehicleAbstractFactoryImpl` constructor
 5. Add `@Named` binding in `AppModule`
@@ -135,8 +154,15 @@ app/
 
 ## Key Dependencies
 
+### Core Dependencies (vehicle-core)
 - Guice 7.0.0 - Dependency injection
 - Lombok 1.18.30 - Code generation
-- JUnit 5 + AssertJ + Mockito - Testing
 - SLF4J + Logback - Logging
 - Apache Commons Lang3 - Utilities
+
+### Testing (All modules)
+- JUnit 5 + AssertJ + Mockito - Testing
+
+### API Dependencies (vehicle-api)
+- Javalin 6.1.3 - Web framework
+- Jackson 2.16.0 - JSON serialization

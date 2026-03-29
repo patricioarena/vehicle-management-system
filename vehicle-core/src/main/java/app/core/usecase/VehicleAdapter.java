@@ -7,5 +7,6 @@ import app.core.model.LightSailboat;
 public interface VehicleAdapter {
 
   Car createCar(StateVehicle state);
+
   LightSailboat createLightSailboat(StateVehicle state);
 }

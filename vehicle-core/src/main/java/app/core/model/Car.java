@@ -5,5 +5,4 @@ import app.core.model.vo.State;
 import lombok.Builder;
 
 @Builder
-public record Car(String typeVehicle, Motor motor, State state)
-    implements Vehicle {}
+public record Car(String typeVehicle, Motor motor, State state) implements Vehicle {}

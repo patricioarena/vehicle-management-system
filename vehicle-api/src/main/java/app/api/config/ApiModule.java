@@ -9,7 +9,7 @@ public class ApiModule extends AbstractModule {
   protected void configure() {
     // Install the core module to get all business bindings
     install(new AppModule());
-    
+
     // Additional API-specific bindings can be added here
   }
 }

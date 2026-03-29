@@ -3,13 +3,13 @@ package app.core.component.motor;
 import app.core.constant.enums.FuelType;
 
 /**
- * Representa un motor eléctrico con propiedades específicas como capacidad de batería.
- * Extiende la clase abstracta {@link Motor}.
+ * Representa un motor eléctrico con propiedades específicas como capacidad de batería. Extiende la
+ * clase abstracta {@link Motor}.
  */
 public class ElectricMotor extends Motor {
   /**
-   * Capacidad de la batería en kWh.
-   * Representa la cantidad de energía que puede almacenar el motor eléctrico.
+   * Capacidad de la batería en kWh. Representa la cantidad de energía que puede almacenar el motor
+   * eléctrico.
    */
   private final int batteryCapacity;
 
@@ -25,7 +25,8 @@ public class ElectricMotor extends Motor {
   }
 
   /**
-   * Muestra los detalles específicos del motor eléctrico, incluyendo potencia y capacidad de batería.
+   * Muestra los detalles específicos del motor eléctrico, incluyendo potencia y capacidad de
+   * batería.
    */
   @Override
   public void showDetails() {

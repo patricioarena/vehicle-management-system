@@ -64,15 +64,17 @@ public class VehicleController {
   }
 
   private void getVehicleTypes(Context ctx) {
-    final List<Map<String, Object>> types = Arrays.stream(TypeVehicle.values())
-        .map(type -> Map.<String, Object>of(
-            "name", type.name(),
-            "id", type.getId(),
-            "hasEngine", type.hasEngine(),
-            "drivingType", type.getDrivingType()
-        ))
-        .toList();
-    
+    final List<Map<String, Object>> types =
+        Arrays.stream(TypeVehicle.values())
+            .map(
+                type ->
+                    Map.<String, Object>of(
+                        "name", type.name(),
+                        "id", type.getId(),
+                        "hasEngine", type.hasEngine(),
+                        "drivingType", type.getDrivingType()))
+            .toList();
+
     log.debug("Vehicle types requested, returning {} types", types.size());
     ctx.json(types);
   }

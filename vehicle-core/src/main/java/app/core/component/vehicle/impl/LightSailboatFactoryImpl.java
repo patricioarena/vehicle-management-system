@@ -25,8 +25,8 @@ public class LightSailboatFactoryImpl implements VehicleFactory {
     return lightSailboatBuilder.build();
   }
 
-  private void buildEngine(final TypeVehicle typeVehicle,
-      final LightSailboat.LightSailboatBuilder sailboat) {
+  private void buildEngine(
+      final TypeVehicle typeVehicle, final LightSailboat.LightSailboatBuilder sailboat) {
     if (typeVehicle.hasEngine()) {
       sailboat.motor(Motor.empty());
     }

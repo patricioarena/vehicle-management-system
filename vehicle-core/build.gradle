@@ -6,18 +6,18 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
-    
+
     // Guice - Dependency Injection
     implementation 'com.google.inject:guice:7.0.0'
-    
+
     // Utilities
     implementation 'com.google.guava:guava:30.1.1-jre'
     implementation 'org.apache.commons:commons-lang3:3.0'
-    
+
     // Logging
     implementation 'org.slf4j:slf4j-api:2.0.9'
     implementation 'ch.qos.logback:logback-classic:1.4.11'
-    
+
     // Testing
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'

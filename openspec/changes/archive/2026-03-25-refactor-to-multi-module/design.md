@@ -128,7 +128,7 @@ ctx.json(car); // Jackson auto-serializes record to JSON
 
 ### Risk: Breaking existing build/setup
 **Impact:** High - developers may have scripts/workflows depending on current structure
-**Mitigation:** 
+**Mitigation:**
 - Clear documentation in README.md about new module structure
 - Update all build commands in documentation
 - Provide migration guide for IDE configurations (IntelliJ module setup)

@@ -5,9 +5,9 @@ package app.api;
 
 import app.api.config.ApiModule;
 import app.api.controller.VehicleController;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinJackson;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +25,18 @@ public class Main {
     final VehicleController controller = injector.getInstance(VehicleController.class);
 
     // Configure and start Javalin
-    final Javalin app = Javalin.create(config -> {
-      config.showJavalinBanner = false;
-      config.jsonMapper(new JavalinJackson().updateMapper(mapper ->
-          mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)));
-    }).start(8080);
+    final Javalin app =
+        Javalin.create(
+                config -> {
+                  config.showJavalinBanner = false;
+                  config.jsonMapper(
+                      new JavalinJackson()
+                          .updateMapper(
+                              mapper ->
+                                  mapper.configure(
+                                      SerializationFeature.FAIL_ON_EMPTY_BEANS, false)));
+                })
+            .start(8080);
 
     // Register routes
     controller.registerRoutes(app);
