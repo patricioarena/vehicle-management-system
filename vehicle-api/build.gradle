@@ -2,6 +2,21 @@ plugins {
     id 'application'
 }
 
+// Checkstyle configuration
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion = '10.12.5'
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+}
+
+tasks.withType(Checkstyle).configureEach {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
 dependencies {
     implementation project(':vehicle-core')
 

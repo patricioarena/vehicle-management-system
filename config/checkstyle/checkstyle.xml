@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+  "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+  "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+  <property name="severity" value="error"/>
+
+  <module name="TreeWalker">
+    <!-- Allow static imports only from DrivingType constants -->
+    <module name="AvoidStaticImport">
+      <property name="excludes" value="app.core.constant.DrivingType.*"/>
+    </module>
+  </module>
+</module>
