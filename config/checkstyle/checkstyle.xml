@@ -7,9 +7,59 @@
   <property name="severity" value="error"/>
 
   <module name="TreeWalker">
-    <!-- Allow static imports only from DrivingType constants -->
+    <!-- Allow static imports only from enum constants -->
     <module name="AvoidStaticImport">
-      <property name="excludes" value="app.core.constant.DrivingType.*"/>
+      <property name="excludes" value="app.core.constant.DrivingType.*,app.core.constant.enums.FuelType.*"/>
+    </module>
+
+    <!-- Disallow javax - use jakarta instead -->
+    <module name="IllegalImport">
+      <property name="illegalPkgs" value="javax"/>
+    </module>
+
+    <!-- Disallow JetBrains annotations - use jakarta.annotation instead -->
+    <module name="IllegalImport">
+      <property name="illegalPkgs" value="org.jetbrains.annotations"/>
+    </module>
+
+    <!-- Require diamond operator for generic type instantiation -->
+    <module name="DiamondOperator"/>
+
+    <!-- Import Control -->
+    <module name="UnusedImports"/>
+    <module name="AvoidStarImport"/>
+
+    <!-- Naming Conventions -->
+    <module name="MethodName"/>
+    <module name="LocalVariableName"/>
+    <module name="TypeName"/>
+    <module name="ConstantName"/>
+    <module name="AbbreviationAsWordInName"/>
+
+    <!-- Formatting -->
+    <module name="Indentation">
+      <property name="basicOffset" value="4"/>
+      <property name="braceAdjustment" value="0"/>
+      <property name="caseIndent" value="4"/>
+    </module>
+    <module name="LineLength">
+      <property name="max" value="100"/>
+    </module>
+    <module name="WhitespaceAround"/>
+    <module name="MissingSwitchDefault"/>
+    <module name="EmptyBlock"/>
+    <module name="NeedBraces"/>
+    <module name="SimplifyBooleanExpression"/>
+
+    <!-- Avoid magic numbers -->
+    <module name="MagicNumber">
+      <property name="tokens" value="NUM_DOUBLE, NUM_FLOAT, NUM_INT, NUM_LONG"/>
+      <property name="ignoreNumbers" value="-1, 0, 1, 2"/>
+    </module>
+
+    <!-- Javadoc for public and protected methods -->
+    <module name="JavadocMethod">
+      <property name="scope" value="public,protected"/>
     </module>
   </module>
 </module>

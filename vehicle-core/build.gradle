@@ -22,6 +22,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
+    // Jakarta - Preferred over javax
+    implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+
     // Guice - Dependency Injection
     implementation 'com.google.inject:guice:7.0.0'
 

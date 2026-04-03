@@ -47,24 +47,67 @@ Gradle-based Java 21 multi-module project (Gradle wrapper included):
 
 On Windows: use `gradlew.bat` instead of `./gradlew`.
 
+### Checkstyle Validation
+
+```bash
+# Run Checkstyle on all modules
+./gradlew checkstyleMain
+
+# Run Checkstyle on test classes
+./gradlew checkstyleTest
+
+# Run all checks (including Checkstyle)
+./gradlew check
+```
+
+Checkstyle está configurado con las siguientes reglas:
+- **AvoidStaticImport**: Solo permite imports estáticos de `DrivingType.*` y `FuelType.*`
+- **AvoidStarImport**: No permite imports wildcard (excepto los enums permitidos)
+- **UnusedImports**: Detecta imports sin usar
+- **IllegalImport**: Prohíbe `javax` y `org.jetbrains.annotations`
+- **DiamondOperator**: Requiere operador diamante `<>`
+- **MagicNumber**: Evita números mágicos (excepto -1, 0, 1, 2)
+- **JavadocMethod**: Requiere Javadoc en métodos public y protected
+- **NeedBraces**: Requiere llaves en bloques de control
+- **LineLength**: Máximo 100 caracteres por línea
+- **Indentation**: 4 espacios
+
+### Jakarta over javax
+
+- **Prefiere Jakarta EE** sobre javax
+- Usa `jakarta.annotation.api.*` en lugar de `javax.annotation.*`
+- Las dependencias de Jakarta ya están incluidas en vehicle-core
+
+### Anotaciones Nullable/NonNull
+
+- **Usa anotaciones de Jakarta**: `jakarta.annotation.Nullable` y `jakarta.annotation.Nonnull`
+- **NO uses** anotaciones de JetBrains (`org.jetbrains.annotations.*`)
+- Ejemplos correctos:
+  ```java
+  import jakarta.annotation.Nullable;
+  import jakarta.annotation.Nonnull;
+  ```
+
 ## Code Style Guidelines
 
 ### Language & Formatting
-- **Java 21** - Use modern features (records, var, switch expressions)
-- **Indent**: 2 spaces (not tabs)
+- **Java 21** - Use modern features (records, var, switch expressions, streams)
+- **Streams over for** - Prefer Java Streams API over traditional for loops
+- **Indent**: 4 spaces (not tabs)
 - **Line length**: 100 characters max
 - **Braces**: Same line (K&R style)
 
 ### Imports
-- Group: java.*, then javax.*, then third-party, then project
+- Group: java.*, jakarta.*, then third-party, then project
 - Static imports last
-- No wildcard imports (except for static enums: `import static app.constant.DrivingType.*;`)
+- No wildcard imports (AvoidStarImport - except for static enum constants allowed by Checkstyle)
 - Example order:
   ```java
-  import java.util.*;
-  import com.google.inject.*;
-  import lombok.*;
-  import app.core.component.*;
+  import java.util.List;
+  import java.util.Map;
+  import com.google.inject.Inject;
+  import lombok.Builder;
+  import app.core.component.VehicleFactory;
   import static app.core.constant.enums.FuelType.*;
   ```
 

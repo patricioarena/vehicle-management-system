@@ -97,6 +97,47 @@ curl http://localhost:8080/vehicles/types
 
 ---
 
+## Validación de Código
+
+Este proyecto utiliza **Checkstyle** para mantener un código limpio y consistente.
+
+### Comandos de Checkstyle
+
+```bash
+# Ejecutar Checkstyle en código principal
+./gradlew checkstyleMain
+
+# Ejecutar Checkstyle en tests
+./gradlew checkstyleTest
+
+# Ejecutar todas las validaciones (incluyendo Checkstyle)
+./gradlew check
+```
+
+### Reglas de Imports
+
+Checkstyle está configurado para detectar imports estáticos wildcard no autorizados.
+
+**Permitidos:**
+- `import static app.core.constant.DrivingType.*;`
+- `import static app.core.constant.enums.FuelType.*;`
+
+**No permitidos (causarán errores):**
+- `import static java.util.Collections.*;`
+- `import static java.lang.Math.*;`
+
+### Jakarta over javax
+
+- **Prefiere Jakarta EE** sobre javax
+- Usa `jakarta.annotation.api.*` en lugar de `javax.annotation.*`
+
+### Anotaciones Nullable/NonNull
+
+- **Usa anotaciones de Jakarta**: `jakarta.annotation.Nullable` y `jakarta.annotation.Nonnull`
+- **NO uses** anotaciones de JetBrains (`org.jetbrains.annotations.*`)
+
+---
+
 ## IDE recomendado
 
 Puedes usar **IntelliJ IDEA** para abrir y trabajar con el proyecto. Asegúrate de que el IDE esté configurado para usar la versión correcta de Java (17+) y que reconozca el proyecto como un proyecto multi-módulo Gradle.
