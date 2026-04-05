@@ -65,8 +65,7 @@ La API inicia en: **http://localhost:8080**
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | GET | `/health` | Health check |
-| POST | `/vehicles/car` | Crear un coche |
-| POST | `/vehicles/sailboat` | Crear un velero ligero |
+| POST | `/vehicles` | Crear un vehículo (cualquier tipo) |
 | GET | `/vehicles/types` | Listar todos los tipos de vehículos |
 
 ### Ejemplos con curl
@@ -76,14 +75,20 @@ La API inicia en: **http://localhost:8080**
 curl http://localhost:8080/health
 
 # Crear un coche
-curl -X POST http://localhost:8080/vehicles/car
+curl -X POST http://localhost:8080/vehicles \
+  -H "Content-Type: application/json" \
+  -d '{"type": "car", "state": "NEW"}'
 
 # Crear un velero
-curl -X POST http://localhost:8080/vehicles/sailboat
+curl -X POST http://localhost:8080/vehicles \
+  -H "Content-Type: application/json" \
+  -d '{"type": "light_sailboat", "state": "NEW"}'
 
 # Listar tipos de vehículos
 curl http://localhost:8080/vehicles/types
 ```
+
+**Nota**: El parámetro `type` acepta cualquier valor del enum `TypeVehicle` (case-insensitive). El parámetro `state` acepta: NEW, CLEAN, ROUGH, DAMAGED.
 
 ### Ejecutar tests del módulo core
 ```bash
@@ -155,8 +160,9 @@ Puedes usar **IntelliJ IDEA** para abrir y trabajar con el proyecto. Asegúrate 
     - Este patrón permite encapsular la lógica de creación de objetos y facilita la extensión para nuevos tipos de vehículos.
 
 3. **Adaptador (Adapter)**:
-    - `VehicleAdapter` y su implementación `VehicleAdapterImpl` actúan como un adaptador para simplificar la interacción con las fábricas de vehículos. Proveen métodos específicos (`createCar`, `createLightSailboat`) para crear vehículos de tipos concretos.
+    - `VehicleAdapter` y su implementación `VehicleAdapterImpl` actúan como un adaptador para simplificar la interacción con las fábricas de vehículos. Proveen un método unificado (`createVehicle(VehicleCreateRequest)`) para crear cualquier tipo de vehículo.
     - Este patrón se utiliza para traducir interfaces incompatibles o simplificar el uso de una API compleja.
+    - El adapter utiliza `TypeVehicleMapper` para mapear strings a enums de forma case-insensitive.
 
 4. **Singleton**:
     - Las factories están configuradas con `@Singleton` en Guice, lo que asegura que solo exista una instancia de estas clases en toda la aplicación.
