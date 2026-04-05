@@ -359,6 +359,7 @@ gradle-app.setting
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+.factorypath
 
 ### Gradle Patch ###
 # Java heap dump

@@ -1,12 +1,19 @@
 package app.core.usecase;
 
-import app.core.constant.enums.StateVehicle;
-import app.core.model.Car;
-import app.core.model.LightSailboat;
+import app.core.model.Vehicle;
+import app.core.model.VehicleCreateRequest;
 
+/**
+ * Adapter interface for vehicle creation operations.
+ */
 public interface VehicleAdapter {
 
-  Car createCar(StateVehicle state);
-
-  LightSailboat createLightSailboat(StateVehicle state);
+  /**
+   * Creates a vehicle based on the provided request.
+   *
+   * @param request the vehicle creation request containing type and state
+   * @return the created vehicle
+   * @throws IllegalArgumentException if the vehicle type or state is invalid
+   */
+  Vehicle createVehicle(VehicleCreateRequest request);
 }

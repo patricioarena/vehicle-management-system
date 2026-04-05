@@ -1,7 +1,8 @@
 package app.api.controller;
 
-import app.core.constant.enums.StateVehicle;
 import app.core.constant.enums.TypeVehicle;
+import app.core.custom.exception.UnsupportedVehicleTypeException;
+import app.core.model.VehicleCreateRequest;
 import app.core.usecase.VehicleAdapter;
 import com.google.inject.Inject;
 import io.javalin.Javalin;
@@ -9,22 +10,24 @@ import io.javalin.http.Context;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class VehicleController {
 
   private final VehicleAdapter vehicleAdapter;
 
-  public void registerRoutes(Javalin app) {
+  @Inject
+  public VehicleController(final VehicleAdapter vehicleAdapter) {
+    this.vehicleAdapter = vehicleAdapter;
+  }
+
+  public void registerRoutes(final Javalin app) {
     // Health check
     app.get("/health", this::healthCheck);
 
-    // Vehicle creation endpoints
-    app.post("/vehicles/car", this::createCar);
-    app.post("/vehicles/sailboat", this::createSailboat);
+    // Vehicle creation endpoint
+    app.post("/vehicles", this::createVehicle);
 
     // Vehicle types endpoint
     app.get("/vehicles/types", this::getVehicleTypes);
@@ -32,38 +35,48 @@ public class VehicleController {
     log.info("Vehicle routes registered");
   }
 
-  private void healthCheck(Context ctx) {
+  private void healthCheck(final Context ctx) {
     ctx.json(Map.of("status", "UP"));
     log.debug("Health check requested");
   }
 
-  private void createCar(Context ctx) {
+  private void createVehicle(final Context ctx) {
     try {
-      final var car = vehicleAdapter.createCar(StateVehicle.NEW);
-      log.info("Created car via API: {}", car);
+      final var request = ctx.bodyAsClass(VehicleCreateRequest.class);
+
+      if (request.type() == null || request.type().isBlank()) {
+        ctx.status(400);
+        ctx.json(Map.of("error", "Missing required field: type"));
+        return;
+      }
+
+      if (request.state() == null || request.state().isBlank()) {
+        ctx.status(400);
+        ctx.json(Map.of("error", "Missing required field: state"));
+        return;
+      }
+
+      final var vehicle = vehicleAdapter.createVehicle(request);
+      log.info("Created vehicle via API: {}", vehicle);
       ctx.status(201);
-      ctx.json(car);
-    } catch (Exception e) {
-      log.error("Error creating car: {}", e.getMessage());
+      ctx.json(vehicle);
+
+    } catch (final UnsupportedVehicleTypeException e) {
+      log.error("Vehicle type not found: {}", e.getMessage());
+      ctx.status(404);
+      ctx.json(Map.of("error", e.getMessage()));
+    } catch (final IllegalArgumentException e) {
+      log.error("Invalid request: {}", e.getMessage());
+      ctx.status(400);
+      ctx.json(Map.of("error", e.getMessage()));
+    } catch (final Exception e) {
+      log.error("Error creating vehicle: {}", e.getMessage());
       ctx.status(500);
       ctx.json(Map.of("error", e.getMessage()));
     }
   }
 
-  private void createSailboat(Context ctx) {
-    try {
-      final var boat = vehicleAdapter.createLightSailboat(StateVehicle.NEW);
-      log.info("Created sailboat via API: {}", boat);
-      ctx.status(201);
-      ctx.json(boat);
-    } catch (Exception e) {
-      log.error("Error creating sailboat: {}", e.getMessage());
-      ctx.status(500);
-      ctx.json(Map.of("error", e.getMessage()));
-    }
-  }
-
-  private void getVehicleTypes(Context ctx) {
+  private void getVehicleTypes(final Context ctx) {
     final List<Map<String, Object>> types =
         Arrays.stream(TypeVehicle.values())
             .map(
