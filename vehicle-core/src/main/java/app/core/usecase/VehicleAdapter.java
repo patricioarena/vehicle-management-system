@@ -6,6 +6,7 @@ import app.core.model.VehicleCreateRequest;
 /**
  * Adapter interface for vehicle creation operations.
  */
+@FunctionalInterface
 public interface VehicleAdapter {
 
   /**

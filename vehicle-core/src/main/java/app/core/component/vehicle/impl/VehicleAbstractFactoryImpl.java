@@ -3,52 +3,66 @@ package app.core.component.vehicle.impl;
 import app.core.component.vehicle.VehicleFactory;
 import app.core.constant.enums.StateVehicle;
 import app.core.constant.enums.TypeVehicle;
-import app.core.custom.exception.UnsupportedVehicleTypeException;
 import app.core.model.Vehicle;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Clase que implementa una fábrica general de vehículos. Utiliza un mapa para asociar tipos de
- * vehículos con sus respectivas fábricas.
+ * Fábrica general de vehículos con auto-registro desde el enum TypeVehicle.
+ * Registra automáticamente una fábrica genérica para todos los tipos del enum
+ * y permite sobreescribir con fábricas específicas mediante MapBinder.
  */
 @Slf4j
 @Singleton
 public class VehicleAbstractFactoryImpl implements VehicleFactory {
 
-  private final Map<TypeVehicle, VehicleFactory> factories;
+    private final Map<TypeVehicle, VehicleFactory> factories;
 
-  @Inject
-  public VehicleAbstractFactoryImpl(
-      final @Named("CarFactory") VehicleFactory carFactory,
-      final @Named("LightSailboatFactory") VehicleFactory sailboatFactory) {
-    // Inicialización del mapa en el constructor
-    factories = new EnumMap<>(TypeVehicle.class);
-    factories.put(TypeVehicle.CAR, carFactory);
-    factories.put(TypeVehicle.LIGHT_SAILBOAT, sailboatFactory);
+    /**
+     * Inicializa la fábrica registrando todos los tipos del enum.
+     * Primero asigna la fábrica genérica a todos los tipos,
+     * luego sobreescribe con fábricas específicas cuando existen.
+     *
+     * @param specificFactories mapa de fábricas específicas por tipo
+     * @param genericFactory fábrica genérica como fallback
+     */
+    @Inject
+    public VehicleAbstractFactoryImpl(
+            final Map<TypeVehicle, VehicleFactory> specificFactories,
+            final GenericVehicleFactoryImpl genericFactory) {
 
-    log.info("Factories initialized: {}", factories.keySet());
-  }
+        factories = new EnumMap<>(TypeVehicle.class);
 
-  /**
-   * Crea un vehículo basado en el tipo y estado proporcionados.
-   *
-   * @param vehicleType El tipo de vehículo a crear.
-   * @param state El estado inicial del vehículo.
-   * @return Una instancia del vehículo creado.
-   * @throws UnsupportedVehicleTypeException Si el tipo de vehículo no está soportado.
-   */
-  @Override
-  public Vehicle apply(final TypeVehicle vehicleType, final StateVehicle state) {
-    final VehicleFactory factory = factories.get(vehicleType);
-    if (factory == null) {
-      throw new UnsupportedVehicleTypeException(
-          "Tipo de vehículo no soportado: " + vehicleType.name());
+        // Registrar la factory genérica para TODOS los tipos del enum
+        Arrays.stream(TypeVehicle.values())
+            .forEach(type -> factories.put(type, genericFactory));
+
+        // Sobreescribir con factories específicas cuando existan
+        factories.putAll(specificFactories);
+
+        log.info(
+            "Factories initialized for {} vehicle types. "
+                + "Specific overrides: {}",
+            factories.size(),
+            specificFactories.keySet()
+        );
     }
-    return factory.apply(vehicleType, state);
-  }
+
+    /**
+     * Crea un vehículo basado en el tipo y estado proporcionados.
+     *
+     * @param vehicleType El tipo de vehículo a crear.
+     * @param state El estado inicial del vehículo.
+     * @return Una instancia del vehículo creado.
+     */
+    @Override
+    public Vehicle apply(
+            final TypeVehicle vehicleType,
+            final StateVehicle state) {
+        return factories.get(vehicleType).apply(vehicleType, state);
+    }
 }

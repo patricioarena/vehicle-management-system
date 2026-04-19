@@ -130,14 +130,16 @@ Checkstyle está configurado con las siguientes reglas:
 - Use `@Inject` constructor injection
 - Pattern: `@RequiredArgsConstructor(onConstructor = @__(@Inject))`
 - Bindings in `AppModule` extending `AbstractModule`
-- Use `@Named("FactoryName")` for multiple bindings
+- Use `MapBinder` for multiple factories (preferred over `@Named`)
 - Prefer `@Singleton` for shared instances
 
 ### Factory Pattern
-- `VehicleFactory` is a functional interface (BiFunction equivalent)
-- Concrete factories implement `VehicleFactory`
-- Register new factories in `VehicleAbstractFactoryImpl` EnumMap
-- Add named binding in `AppModule`
+- `VehicleFactory` is a functional interface (`BiFunction<TypeVehicle, StateVehicle, Vehicle>`)
+- `GenericVehicleFactoryImpl` - Default factory for all vehicle types, auto-registered for every TypeVehicle
+- `VehicleAbstractFactoryImpl` - Uses Guice MapBinder for auto-registration:
+  - All types from TypeVehicle enum get the generic factory by default
+  - Specific factories override the generic one via MapBinder in AppModule
+- To add specialized factory: use MapBinder in AppModule (no changes to VehicleAbstractFactoryImpl needed)
 
 ### Error Handling
 - Use custom exceptions in `app.core.custom.exception`
@@ -188,12 +190,24 @@ app/
 - Keep comments current with code changes
 
 ### Adding New Vehicle Types
+
+#### Simple Method (Generic Vehicle)
+For vehicle types that don't require specialized behavior:
+
+1. Add type to `TypeVehicle` enum with id, hasEngine, drivingType
+2. That's it! The generic factory handles it automatically via auto-registration
+
+#### Specialized Factory Method
+For vehicle types requiring custom creation logic:
+
 1. Create model record in `app.core.model` with `@Builder`
 2. Create factory in `app.core.component.vehicle.impl`
 3. Add type to `TypeVehicle` enum with id, hasEngine, drivingType
-4. Register factory in `VehicleAbstractFactoryImpl` constructor
-5. Add `@Named` binding in `AppModule`
-6. Add adapter method in `VehicleAdapter`/`VehicleAdapterImpl`
+4. Add MapBinder binding in `AppModule`:
+   ```java
+   factoryBinder.addBinding(TypeVehicle.YOUR_TYPE).to(YourFactoryImpl.class);
+   ```
+5. Add adapter method in `VehicleAdapter`/`VehicleAdapterImpl`
 
 ## Key Dependencies
 
