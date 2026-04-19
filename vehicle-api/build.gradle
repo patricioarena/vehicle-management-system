@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'jacoco'
 }
 
 // Checkstyle configuration
@@ -38,6 +39,7 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.4.11'
 
     // Testing
+    testImplementation 'io.javalin:javalin-testtools:4.0.0'
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.1'

@@ -35,4 +35,68 @@ subprojects {
     tasks.withType(Test).configureEach {
         useJUnitPlatform()
     }
+
+    // JaCoCo configuration for code coverage
+    plugins.withId('jacoco') {
+        jacoco {
+            toolVersion = '0.8.11'
+        }
+
+        tasks.withType(Test).configureEach {
+            finalizedBy jacocoTestReport
+        }
+
+        // Configure JaCoCo test report
+        jacocoTestReport {
+            dependsOn test
+            reports {
+                xml.required = true
+                html.required = true
+            }
+            afterEvaluate {
+                classDirectories.setFrom(files(classDirectories.files.collect {
+                    fileTree(dir: it, exclude: ['**/AppModule.class'])
+                }))
+            }
+        }
+
+        // Coverage verification task
+        jacocoTestCoverageVerification {
+            dependsOn test
+            violationRules {
+                // Overall project coverage
+                rule {
+                    limit {
+                        minimum = 0.35 // 35% overall coverage minimum (increasable as tests are added)
+                    }
+                }
+                // Per-class coverage (excludes auto-generated and boilerplate classes)
+                rule {
+                    element = 'CLASS'
+                    limit {
+                        counter = 'LINE'
+                        minimum = 0.35 // 35% per class minimum
+                    }
+                    excludes = [
+                        '*.*Builder',           // Lombok builders
+                        '*.*Builder*',          // Lombok builder related
+                        '*.*Module',            // Guice modules
+                        '*.Main',               // Application entry points
+                        '*.model.*',            // Model/record classes
+                        '*.constant.*',         // Enums and constants
+                        '*.exception.*',        // Exception classes
+                        '*.custom.exception.*', // Custom exceptions
+                        '*.config.*',           // Configuration classes
+                        '*Mapper*'              // Mapper classes
+                    ]
+                }
+            }
+        }
+
+        // Optional: don't fail the build on coverage verification during development
+        // Uncomment the line below to disable coverage verification temporarily
+        // jacocoTestCoverageVerification.enabled = false
+
+        check.dependsOn jacocoTestCoverageVerification
+    }
 }
