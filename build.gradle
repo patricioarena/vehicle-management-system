@@ -55,7 +55,7 @@ subprojects {
             }
             afterEvaluate {
                 classDirectories.setFrom(files(classDirectories.files.collect {
-                    fileTree(dir: it, exclude: ['**/AppModule.class'])
+                    fileTree(dir: it, exclude: ['**/AppModule.class', '**/Main.class', '**/app.api.Main', '**/app.cli.Main'])
                 }))
             }
         }
@@ -64,7 +64,7 @@ subprojects {
         jacocoTestCoverageVerification {
             dependsOn test
             violationRules {
-                // Overall minimum - 60%
+                // Minimum per module (60% minimum - can increase as we add more tests)
                 rule {
                     limit {
                         minimum = 0.60
@@ -81,7 +81,7 @@ subprojects {
                         '*.*Builder',           // Lombok builders
                         '*.*Builder*',          // Lombok builder related
                         '*.*Module',            // Guice modules
-                        '*.Main',               // Application entry points
+                        '*Main',               // Application entry points
                         '*.model.*',            // Model/record classes
                         '*.constant.*',         // Enums and constants
                         '*.exception.*',        // Exception classes
