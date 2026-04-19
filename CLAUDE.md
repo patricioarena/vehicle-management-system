@@ -15,6 +15,9 @@ Vehicle Management System - A Java 21 multi-module Gradle project demonstrating 
 # Build all modules
 ./gradlew build
 
+# Clean build artifacts
+./gradlew clean
+
 # Run tests
 ./gradlew test                          # all modules
 ./gradlew :vehicle-core:test            # core only
@@ -29,8 +32,37 @@ Vehicle Management System - A Java 21 multi-module Gradle project demonstrating 
 ./gradlew checkstyleTest                # Checkstyle on test sources
 ./gradlew check                         # All checks (Checkstyle + tests)
 
+# Utilities
+./gradlew dependencies                  # Check dependencies
+./gradlew :vehicle-core:jar             # Build vehicle-core JAR
+
 # On Windows: use gradlew.bat instead of ./gradlew
 ```
+
+### JaCoCo Code Coverage
+
+```bash
+# Generate coverage reports (runs after tests)
+./gradlew test jacocoTestReport
+
+# Generate coverage report for specific module
+./gradlew :vehicle-core:test :vehicle-core:jacocoTestReport
+
+# Verify coverage meets thresholds (part of check)
+./gradlew jacocoTestCoverageVerification
+
+# View HTML report
+# On Windows: start vehicle-core\build\reports\jacoco\test\html\index.html
+```
+
+**Coverage Thresholds:**
+- **vehicle-core:** 60% minimum (current: 96%)
+- **vehicle-api:** 60% minimum (current: ~82%; verification capped at ~60% due to uncatchable `catch(Exception)` in controller)
+- **Per class:** 60% minimum
+
+**Reports generated:**
+- HTML: `build/reports/jacoco/test/html/index.html`
+- XML: `build/reports/jacoco/test/jacocoTestReport.xml`
 
 ## Code Style (enforced by Checkstyle)
 
@@ -51,8 +83,8 @@ See `AGENTS.md` for full code style guidelines, naming conventions, and architec
 **Design patterns used:** Dependency Injection (Guice), Factory, Abstract Factory, Adapter, Singleton, Builder, Enum Strategy, Type Map (EnumMap)
 
 **Factory Pattern:**
-- `GenericVehicleFactoryImpl` - Default factory for all vehicle types
-- `VehicleAbstractFactoryImpl` - Uses Guice MapBinder for auto-registration of specific factories
+- `GenericVehicleFactoryImpl` - Default factory auto-registrada para todos los tipos en `TypeVehicle`
+- `VehicleAbstractFactoryImpl` - Uses Guice MapBinder; factories específicas sobreescriben la genérica
 - MapBinder allows adding specialized factories without modifying the abstract factory class
 
 **Package structure:**
@@ -74,7 +106,8 @@ app.api.config/                   # API-specific Guice bindings (ApiModule)
 
 - **Frameworks:** JUnit 5, AssertJ, Mockito
 - **Pattern:** Arrange-Act-Assert with `@DisplayName` annotations
-- **Assertions:** Use AssertJ fluent style (`assertThat(...).hasValue(...)`)
+- **Assertions:** Use AssertJ fluent style via `WithAssertions` (`assertThat(...).hasValue(...)`)
+- **Mockito:** `@ExtendWith(MockitoExtension.class)` for Mockito support
 - **Naming:** `{ClassUnderTest}Test` classes, descriptive method names
 - Tests live in `src/test/java/` mirroring the main source structure
 
@@ -99,8 +132,8 @@ GET  /vehicles/types  # List all vehicle types
 |-----------|---------|---------|
 | Guice | 7.0.0 | Dependency injection |
 | Lombok | 1.18.30 | Code generation (@Slf4j, @Builder) |
-| Javalin | 5.6.3 | REST framework (vehicle-api) |
-| Jackson | 2.15.2 | JSON serialization |
+| Javalin | 6.1.3 | REST framework (vehicle-api) |
+| Jackson | 2.16.0 | JSON serialization |
 | SLF4J + Logback | 2.0.9 / 1.4.11 | Logging |
 | JUnit 5 | 5.10.1 | Testing |
 | AssertJ | 3.24.2 | Fluent assertions |
