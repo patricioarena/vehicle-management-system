@@ -64,10 +64,10 @@ subprojects {
         jacocoTestCoverageVerification {
             dependsOn test
             violationRules {
-                // Minimum per module (60% minimum - can increase as we add more tests)
+                // Minimum: 67% (current vehicle-api verification level)
                 rule {
                     limit {
-                        minimum = 0.60
+                        minimum = 0.67
                     }
                 }
                 // Per-class coverage (excludes auto-generated and boilerplate classes)
