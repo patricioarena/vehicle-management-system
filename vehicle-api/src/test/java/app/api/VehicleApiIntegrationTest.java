@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import app.api.config.ApiModule;
 import app.api.controller.VehicleController;
-import app.core.config.AppModule;
-import app.core.model.VehicleCreateRequest;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -136,5 +134,101 @@ class VehicleApiIntegrationTest {
     final var responseCode = conn.getResponseCode();
 
     assertThat(responseCode).isEqualTo(400);
+  }
+
+  @Test
+  @DisplayName("Should return 400 for null type")
+  void shouldReturn400ForNullType() throws Exception {
+    final var url = new URL(baseUrl + "/vehicles");
+    final var conn = (HttpURLConnection) url.openConnection();
+    conn.setRequestMethod("POST");
+    conn.setRequestProperty("Content-Type", "application/json");
+    conn.setDoOutput(true);
+
+    final var json = "{\"type\":null,\"state\":\"NEW\"}";
+    try (final var os = conn.getOutputStream()) {
+      os.write(json.getBytes(StandardCharsets.UTF_8));
+    }
+
+    final var responseCode = conn.getResponseCode();
+
+    assertThat(responseCode).isEqualTo(400);
+  }
+
+  @Test
+  @DisplayName("Should return 400 for null state")
+  void shouldReturn400ForNullState() throws Exception {
+    final var url = new URL(baseUrl + "/vehicles");
+    final var conn = (HttpURLConnection) url.openConnection();
+    conn.setRequestMethod("POST");
+    conn.setRequestProperty("Content-Type", "application/json");
+    conn.setDoOutput(true);
+
+    final var json = "{\"type\":\"CAR\",\"state\":null}";
+    try (final var os = conn.getOutputStream()) {
+      os.write(json.getBytes(StandardCharsets.UTF_8));
+    }
+
+    final var responseCode = conn.getResponseCode();
+
+    assertThat(responseCode).isEqualTo(400);
+  }
+
+  @Test
+  @DisplayName("Should return 400 for empty state")
+  void shouldReturn400ForEmptyState() throws Exception {
+    final var url = new URL(baseUrl + "/vehicles");
+    final var conn = (HttpURLConnection) url.openConnection();
+    conn.setRequestMethod("POST");
+    conn.setRequestProperty("Content-Type", "application/json");
+    conn.setDoOutput(true);
+
+    final var json = "{\"type\":\"CAR\",\"state\":\"\"}";
+    try (final var os = conn.getOutputStream()) {
+      os.write(json.getBytes(StandardCharsets.UTF_8));
+    }
+
+    final var responseCode = conn.getResponseCode();
+
+    assertThat(responseCode).isEqualTo(400);
+  }
+
+  @Test
+  @DisplayName("Should create light sailboat via API")
+  void shouldCreateLightSailboat() throws Exception {
+    final var url = new URL(baseUrl + "/vehicles");
+    final var conn = (HttpURLConnection) url.openConnection();
+    conn.setRequestMethod("POST");
+    conn.setRequestProperty("Content-Type", "application/json");
+    conn.setDoOutput(true);
+
+    final var json = "{\"type\":\"LIGHT_SAILBOAT\",\"state\":\"NEW\"}";
+    try (final var os = conn.getOutputStream()) {
+      os.write(json.getBytes(StandardCharsets.UTF_8));
+    }
+
+    final var responseCode = conn.getResponseCode();
+
+    assertThat(responseCode).isEqualTo(201);
+  }
+
+  @Test
+  @DisplayName("Should create vehicle with different states")
+  void shouldCreateVehicleWithDifferentStates() throws Exception {
+    for (final String state : new String[] {"NEW", "CLEAN", "ROUGH"}) {
+      final var url = new URL(baseUrl + "/vehicles");
+      final var conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestMethod("POST");
+      conn.setRequestProperty("Content-Type", "application/json");
+      conn.setDoOutput(true);
+
+      final var json = "{\"type\":\"CAR\",\"state\":\"" + state + "\"}";
+      try (final var os = conn.getOutputStream()) {
+        os.write(json.getBytes(StandardCharsets.UTF_8));
+      }
+
+      final var responseCode = conn.getResponseCode();
+      assertThat(responseCode).isEqualTo(201);
+    }
   }
 }

@@ -64,10 +64,10 @@ subprojects {
         jacocoTestCoverageVerification {
             dependsOn test
             violationRules {
-                // Overall project coverage
+                // Overall project minimum - 60% for modules with tests
                 rule {
                     limit {
-                        minimum = 0.35 // 35% overall coverage minimum (increasable as tests are added)
+                        minimum = 0.60
                     }
                 }
                 // Per-class coverage (excludes auto-generated and boilerplate classes)
@@ -75,7 +75,7 @@ subprojects {
                     element = 'CLASS'
                     limit {
                         counter = 'LINE'
-                        minimum = 0.35 // 35% per class minimum
+                        minimum = 0.60 // 60% per class minimum
                     }
                     excludes = [
                         '*.*Builder',           // Lombok builders
