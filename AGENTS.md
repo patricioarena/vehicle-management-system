@@ -60,6 +60,33 @@ On Windows: use `gradlew.bat` instead of `./gradlew`.
 ./gradlew check
 ```
 
+### JaCoCo Code Coverage
+
+```bash
+# Generate coverage reports (runs after tests)
+./gradlew test jacocoTestReport
+
+# Generate coverage report for specific module
+./gradlew :vehicle-core:test :vehicle-core:jacocoTestReport
+
+# Verify coverage meets thresholds (part of check)
+./gradlew jacocoTestCoverageVerification
+
+# View HTML report (opens in browser on macOS)
+open vehicle-core/build/reports/jacoco/test/html/index.html
+# On Windows: start vehicle-core\build\reports\jacoco\test\html\index.html
+```
+
+**Coverage Thresholds:**
+- **Overall minimum:** 60% (threshold por módulo más bajo)
+- **vehicle-core:** 96% (sobrepasa objetivo de 70%)
+- **vehicle-api:** 60% (threshold actual)
+- **Per class:** 60% minimum
+
+**Reports generated:**
+- HTML: `build/reports/jacoco/test/html/index.html`
+- XML: `build/reports/jacoco/test/jacocoTestReport.xml`
+
 Checkstyle está configurado con las siguientes reglas:
 - **AvoidStaticImport**: Solo permite imports estáticos de `DrivingType.*` y `FuelType.*`
 - **AvoidStarImport**: No permite imports wildcard (excepto los enums permitidos)

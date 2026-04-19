@@ -64,7 +64,7 @@ subprojects {
         jacocoTestCoverageVerification {
             dependsOn test
             violationRules {
-                // Overall project minimum - 60% for modules with tests
+                // Overall minimum - 60%
                 rule {
                     limit {
                         minimum = 0.60
