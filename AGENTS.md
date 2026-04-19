@@ -78,9 +78,9 @@ open vehicle-core/build/reports/jacoco/test/html/index.html
 ```
 
 **Coverage Thresholds:**
-- **Overall minimum:** 60% (threshold por módulo más bajo)
-- **vehicle-core:** 96% (sobrepasa objetivo de 70%)
-- **vehicle-api:** 60% (threshold actual)
+- **vehicle-core:** 60% minimum verification (current: 96%)
+- **vehicle-api:** 60% minimum verification (current: 82% report)
+  - Note: vehicle-api verification capped at ~60% due to uncatchable catch(Exception) in controller
 - **Per class:** 60% minimum
 
 **Reports generated:**

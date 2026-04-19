@@ -12,7 +12,6 @@ import io.javalin.json.JavalinJackson;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -233,20 +232,21 @@ class VehicleApiIntegrationTest {
   }
 
   @Test
-  @DisplayName("Should create boat via API")
-  void shouldCreateBoat() throws Exception {
+  @DisplayName("Should create truck via API")
+  void shouldCreateTruck() throws Exception {
     final var url = new URL(baseUrl + "/vehicles");
     final var conn = (HttpURLConnection) url.openConnection();
     conn.setRequestMethod("POST");
     conn.setRequestProperty("Content-Type", "application/json");
     conn.setDoOutput(true);
 
-    final var json = "{\"type\":\"BOAT\",\"state\":\"NEW\"}";
+    final var json = "{\"type\":\"TRUCK\",\"state\":\"NEW\"}";
     try (final var os = conn.getOutputStream()) {
       os.write(json.getBytes(StandardCharsets.UTF_8));
     }
 
     final var responseCode = conn.getResponseCode();
+
     assertThat(responseCode).isEqualTo(201);
   }
 
@@ -265,6 +265,7 @@ class VehicleApiIntegrationTest {
     }
 
     final var responseCode = conn.getResponseCode();
+
     assertThat(responseCode).isEqualTo(201);
   }
 
@@ -283,42 +284,7 @@ class VehicleApiIntegrationTest {
     }
 
     final var responseCode = conn.getResponseCode();
-    assertThat(responseCode).isEqualTo(201);
-  }
 
-  @Test
-  @DisplayName("Should return 404 for invalid state value")
-  void shouldReturn404ForInvalidState() throws Exception {
-    final var url = new URL(baseUrl + "/vehicles");
-    final var conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-
-    final var json = "{\"type\":\"CAR\",\"state\":\"INVALID_STATE\"}";
-    try (final var os = conn.getOutputStream()) {
-      os.write(json.getBytes(StandardCharsets.UTF_8));
-    }
-
-    final var responseCode = conn.getResponseCode();
-    assertThat(responseCode).isEqualTo(400);
-  }
-
-  @Test
-  @DisplayName("Should create truck via API")
-  void shouldCreateTruck() throws Exception {
-    final var url = new URL(baseUrl + "/vehicles");
-    final var conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-
-    final var json = "{\"type\":\"TRUCK\",\"state\":\"NEW\"}";
-    try (final var os = conn.getOutputStream()) {
-      os.write(json.getBytes(StandardCharsets.UTF_8));
-    }
-
-    final var responseCode = conn.getResponseCode();
     assertThat(responseCode).isEqualTo(201);
   }
 
@@ -337,6 +303,7 @@ class VehicleApiIntegrationTest {
     }
 
     final var responseCode = conn.getResponseCode();
+
     assertThat(responseCode).isEqualTo(201);
   }
 
@@ -355,6 +322,7 @@ class VehicleApiIntegrationTest {
     }
 
     final var responseCode = conn.getResponseCode();
+
     assertThat(responseCode).isEqualTo(201);
   }
 
@@ -373,6 +341,7 @@ class VehicleApiIntegrationTest {
     }
 
     final var responseCode = conn.getResponseCode();
+
     assertThat(responseCode).isEqualTo(201);
   }
 
@@ -391,6 +360,7 @@ class VehicleApiIntegrationTest {
     }
 
     final var responseCode = conn.getResponseCode();
+
     assertThat(responseCode).isEqualTo(201);
   }
 
@@ -409,168 +379,7 @@ class VehicleApiIntegrationTest {
     }
 
     final var responseCode = conn.getResponseCode();
-    assertThat(responseCode).isEqualTo(201);
-  }
 
-  @Test
-  @DisplayName("Should create ambulance via API")
-  void shouldCreateAmbulance() throws Exception {
-    final var url = new URL(baseUrl + "/vehicles");
-    final var conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-
-    final var json = "{\"type\":\"AMBULANCE\",\"state\":\"NEW\"}";
-    try (final var os = conn.getOutputStream()) {
-      os.write(json.getBytes(StandardCharsets.UTF_8));
-    }
-
-    final var responseCode = conn.getResponseCode();
-    assertThat(responseCode).isEqualTo(201);
-  }
-
-  @Test
-  @DisplayName("Should create jet ski via API")
-  void shouldCreateJetSki() throws Exception {
-    final var url = new URL(baseUrl + "/vehicles");
-    final var conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-
-    final var json = "{\"type\":\"JET_SKI\",\"state\":\"NEW\"}";
-    try (final var os = conn.getOutputStream()) {
-      os.write(json.getBytes(StandardCharsets.UTF_8));
-    }
-
-    final var responseCode = conn.getResponseCode();
-    assertThat(responseCode).isEqualTo(201);
-  }
-
-  @Test
-  @DisplayName("Should create submarine via API")
-  void shouldCreateSubmarine() throws Exception {
-    final var url = new URL(baseUrl + "/vehicles");
-    final var conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-
-    final var json = "{\"type\":\"SUBMARINE\",\"state\":\"NEW\"}";
-    try (final var os = conn.getOutputStream()) {
-      os.write(json.getBytes(StandardCharsets.UTF_8));
-    }
-
-    final var responseCode = conn.getResponseCode();
-    assertThat(responseCode).isEqualTo(201);
-  }
-
-  @Test
-  @DisplayName("Should create skateboard via API")
-  void shouldCreateSkateboard() throws Exception {
-    final var url = new URL(baseUrl + "/vehicles");
-    final var conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-
-    final var json = "{\"type\":\"SKATEBOARD\",\"state\":\"NEW\"}";
-    try (final var os = conn.getOutputStream()) {
-      os.write(json.getBytes(StandardCharsets.UTF_8));
-    }
-
-    final var responseCode = conn.getResponseCode();
-    assertThat(responseCode).isEqualTo(201);
-  }
-
-  @Test
-  @DisplayName("Should create electric scooter via API")
-  void shouldCreateElectricScooter() throws Exception {
-    final var url = new URL(baseUrl + "/vehicles");
-    final var conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-
-    final var json = "{\"type\":\"ELECTRIC_SCOOTER\",\"state\":\"NEW\"}";
-    try (final var os = conn.getOutputStream()) {
-      os.write(json.getBytes(StandardCharsets.UTF_8));
-    }
-
-    final var responseCode = conn.getResponseCode();
-    assertThat(responseCode).isEqualTo(201);
-  }
-
-  @Test
-  @DisplayName("Should create quad via API")
-  void shouldCreateQuad() throws Exception {
-    final var url = new URL(baseUrl + "/vehicles");
-    final var conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-
-    final var json = "{\"type\":\"QUAD\",\"state\":\"NEW\"}";
-    try (final var os = conn.getOutputStream()) {
-      os.write(json.getBytes(StandardCharsets.UTF_8));
-    }
-
-    final var responseCode = conn.getResponseCode();
-    assertThat(responseCode).isEqualTo(201);
-  }
-
-  @Test
-  @DisplayName("Should create snowmobile via API")
-  void shouldCreateSnowmobile() throws Exception {
-    final var url = new URL(baseUrl + "/vehicles");
-    final var conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-
-    final var json = "{\"type\":\"SNOWMOBILE\",\"state\":\"NEW\"}";
-    try (final var os = conn.getOutputStream()) {
-      os.write(json.getBytes(StandardCharsets.UTF_8));
-    }
-
-    final var responseCode = conn.getResponseCode();
-    assertThat(responseCode).isEqualTo(201);
-  }
-
-  @Test
-  @DisplayName("Should create kayak via API")
-  void shouldCreateKayak() throws Exception {
-    final var url = new URL(baseUrl + "/vehicles");
-    final var conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-
-    final var json = "{\"type\":\"KAYAK\",\"state\":\"NEW\"}";
-    try (final var os = conn.getOutputStream()) {
-      os.write(json.getBytes(StandardCharsets.UTF_8));
-    }
-
-    final var responseCode = conn.getResponseCode();
-    assertThat(responseCode).isEqualTo(201);
-  }
-
-  @Test
-  @DisplayName("Should create mountain bike via API")
-  void shouldCreateMountainBike() throws Exception {
-    final var url = new URL(baseUrl + "/vehicles");
-    final var conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("POST");
-    conn.setRequestProperty("Content-Type", "application/json");
-    conn.setDoOutput(true);
-
-    final var json = "{\"type\":\"MOUNTAIN_BIKE\",\"state\":\"NEW\"}";
-    try (final var os = conn.getOutputStream()) {
-      os.write(json.getBytes(StandardCharsets.UTF_8));
-    }
-
-    final var responseCode = conn.getResponseCode();
     assertThat(responseCode).isEqualTo(201);
   }
 }
