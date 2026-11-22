@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew test:*)",
+      "Bash(python3:*)",
+      "Bash(./gradlew :vehicle-core:jacocoTestReport :vehicle-api:jacocoTestReport --rerun-tasks)",
+      "Bash(./gradlew :vehicle-api:test:*)",
+      "Bash(mkdir -p .claude/commands)",
+      "Bash(ln -s \"../../.opencode/skills/openspec-explore/SKILL.md\" \".claude/commands/opsx-explore.md\")",
+      "Bash(ln -s \"../../.opencode/skills/openspec-propose/SKILL.md\" \".claude/commands/opsx-propose.md\")",
+      "Bash(ln -s \"../../.opencode/skills/openspec-apply-change/SKILL.md\" \".claude/commands/opsx-apply.md\")",
+      "Bash(ln -s \"../../.opencode/skills/openspec-archive-change/SKILL.md\" \".claude/commands/opsx-archive.md\")",
+      "Bash(openspec list:*)",
+      "Bash(openspec new:*)",
+      "Bash(openspec status:*)",
+      "Bash(openspec instructions:*)",
+      "Bash(./gradlew :vehicle-api:cleanTest :vehicle-api:test :vehicle-api:jacocoTestReport)"
+    ]
+  }
+}
